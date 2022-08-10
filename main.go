@@ -47,14 +47,14 @@ func main() {
 }
 
 func downloadAll(path string) {
-	videoPath, err := downloadFile(path, "https://za-warudo.vercel.app/video.mp4", "video", "mp4")
+	videoPath, err := downloadFile(path, "https://github.com/Pronicio/ZA-WARUDO/raw/main/resources/video.mp4", "video", "mp4")
 	if err != nil {
 		println("Failed to download the video :", err)
 	} else {
 		println("videoPath", videoPath)
 	}
 
-	zipPath, err := downloadFile(path, "https://za-warudo.vercel.app/ffplay.zip", "ffplay", "zip")
+	zipPath, err := downloadFile(path, "https://github.com/Pronicio/ZA-WARUDO/raw/main/resources/ffplay.zip", "ffplay", "zip")
 	if err != nil {
 		println("Failed to download the video :", err)
 	} else {
