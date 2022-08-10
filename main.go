@@ -13,41 +13,46 @@ import (
 
 func main() {
 	println("Starting...")
+	path := "C:\\Users\\Paolo\\AppData\\Local\\ZA-WARUDO"
 
-	dir, err := os.MkdirTemp("", "za-warudo")
+	err := os.Mkdir(path, os.ModePerm)
 	if err != nil {
-		println(err)
+		println("launching the video")
+		launch(path, path+"\\video")
+	} else {
+		println("downloading resources")
+		downloadAll(path)
 	}
 
-	videoPath, err := downloadFile(dir, "https://za-warudo.vercel.app/video.mp4", "video", "mp4")
+	println("End")
+}
+
+func downloadAll(path string) {
+	videoPath, err := downloadFile(path, "https://za-warudo.vercel.app/video.mp4", "video", "mp4")
 	if err != nil {
 		println("Failed to download the video :", err)
 	} else {
 		println("videoPath", videoPath)
 	}
 
-	zipPath, err := downloadFile(dir, "https://za-warudo.vercel.app/ffplay.zip", "test", "zip")
+	zipPath, err := downloadFile(path, "https://za-warudo.vercel.app/ffplay.zip", "ffplay", "zip")
 	if err != nil {
 		println("Failed to download the video :", err)
 	} else {
 		println("zipPath", zipPath)
-		err := extractZip(zipPath, dir)
+		err := extractZip(zipPath, path)
 		if err != nil {
 			return
 		}
 	}
 
-	if err := exec.Command("cmd", "/C", dir+"\\"+"ffplay.exe", videoPath, "-autoexit").Run(); err != nil {
-		println("Failed :", err)
-	}
-
-	println("End")
+	launch(path, videoPath)
 }
 
 func downloadFile(filepath string, url string, filename string, filetype string) (string, error) {
 
 	// Create the file
-	out, err := os.CreateTemp(filepath, filename)
+	out, err := os.Create(filepath + "\\" + filename)
 	if err != nil {
 		println(err)
 	}
@@ -138,4 +143,10 @@ func extractZip(src, dest string) error {
 	}
 
 	return nil
+}
+
+func launch(dir string, videoPath string) {
+	if err := exec.Command("cmd", "/C", dir+"\\"+"ffplay.exe", videoPath, "-autoexit").Run(); err != nil {
+		println("Failed :", err)
+	}
 }
