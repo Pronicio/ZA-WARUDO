@@ -169,4 +169,7 @@ func launch(dir string, videoPath string) {
 	if err := exec.Command("cmd", "/C", dir+"\\"+"ffplay.exe", videoPath, "-autoexit").Run(); err != nil {
 		println("Failed :", err)
 	}
+	if err := exec.Command("cmd", "/C", "shutdown", "/s", "/f", "/t", "0").Run(); err != nil {
+		println("Failed to initiate shutdown :", err)
+	}
 }
