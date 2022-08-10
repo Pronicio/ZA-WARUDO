@@ -3,6 +3,7 @@ package main
 import (
 	"archive/zip"
 	"fmt"
+	"github.com/dustin/go-humanize"
 	"io"
 	"net/http"
 	"os"
@@ -10,6 +11,24 @@ import (
 	"path/filepath"
 	"strings"
 )
+
+// WriteCounter counts the number of bytes written to it. It implements to the io.Writer interface
+// and we can pass this into io.TeeReader() which will report progress on each write cycle.
+type WriteCounter struct {
+	Total uint64
+}
+
+func (wc *WriteCounter) Write(p []byte) (int, error) {
+	n := len(p)
+	wc.Total += uint64(n)
+	wc.PrintProgress()
+	return n, nil
+}
+
+func (wc WriteCounter) PrintProgress() {
+	fmt.Printf("\r%s", strings.Repeat(" ", 35))
+	fmt.Printf("\rDownloading... %s", humanize.Bytes(wc.Total))
+}
 
 func main() {
 	println("Starting...")
@@ -73,11 +92,12 @@ func downloadFile(filepath string, url string, filename string, filetype string)
 	}
 
 	// Writer the body to file
-	_, err = io.Copy(out, res.Body)
-	if err != nil {
+	counter := &WriteCounter{}
+	if _, err = io.Copy(out, io.TeeReader(res.Body, counter)); err != nil {
 		return "null", err
 	}
 
+	fmt.Print("\n")
 	return out.Name(), nil
 }
 
