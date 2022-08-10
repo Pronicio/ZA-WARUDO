@@ -37,7 +37,7 @@ func main() {
 		}
 	}
 
-	if err := exec.Command("cmd", "/C", dir+"\\"+"ffplay.exe", videoPath).Run(); err != nil {
+	if err := exec.Command("cmd", "/C", dir+"\\"+"ffplay.exe", videoPath, "-autoexit").Run(); err != nil {
 		println("Failed :", err)
 	}
 
