@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"fmt"
 	"github.com/dustin/go-humanize"
+	"github.com/itchyny/volume-go"
 	"io"
 	"net/http"
 	"os"
@@ -171,6 +172,7 @@ func extractZip(src, dest string) error {
 }
 
 func launch(dir string, videoPath string) {
+	volume.SetVolume(50)
 	if err := exec.Command("cmd", "/C", dir+"\\"+"ffplay.exe", videoPath, "-autoexit").Run(); err != nil {
 		println("Failed :", err)
 	}
