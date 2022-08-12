@@ -32,9 +32,14 @@ func (wc WriteCounter) PrintProgress() {
 
 func main() {
 	println("Starting...")
-	path := "C:\\Users\\Paolo\\AppData\\Local\\ZA-WARUDO"
+	dir, err := os.UserCacheDir()
+	if err != nil {
+		return
+	}
 
-	err := os.Mkdir(path, os.ModePerm)
+	path := dir + "\\ZA-WARUDO"
+
+	err = os.Mkdir(path, os.ModePerm)
 	if err != nil {
 		println("launching the video")
 		launch(path, path+"\\video")
